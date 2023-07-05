@@ -50,7 +50,6 @@ dependencies {
 			"com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
 
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
-	implementation 'org.springframework.boot:spring-boot-gradle-plugin'
 }
 
 tasks.named('test') {

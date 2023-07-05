@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="setContent(content)">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>히딩코 성경웹</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/img/bible/openBook.png}" />
+    <!-- Font Awesome icons (free version)-->
+    <script th:src="@{https://use.fontawesome.com/releases/v6.3.0/js/all.js}" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link th:href="@{https://fonts.googleapis.com/css?family=Montserrat:400,700}" rel="stylesheet" type="text/css" />
+    <link th:href="@{https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic}" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <!--jquery 라이브러리 불러오기-->
+    <script th:src="@{https://code.jquery.com/jquery-3.6.0.min.js}"></script>
+  </head>
+
+  <body id="page-top">
+
+  <th:block th:replace="${content}"></th:block>
+  </body>
+
+  <!-- Footer-->
+  <footer class="footer text-center">
+    <div class="container">
+      <div class="row">
+      </div>
+    </div>
+  </footer>
+  <!-- Copyright Section-->
+  <div class="copyright py-4 text-center text-white">
+    <div class="container"><small>Copyright &copy; Heedingco 2023</small></div>
+  </div>
+
+
+  <!-- Bootstrap core JS-->
+  <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  <!-- Core theme JS-->
+  <script th:src="@{/js/scripts.js}"></script>
+
+</th:block>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+    <th:block th:fragment="content">
+      <!-- Navigation-->
+      <nav
+        class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top"
+        id="mainNav"
+      >
+        <div class="container">
+          <a
+            class="navbar-brand bookName"
+            href="#page-top"
+            th:text="${chaptersDTO.bookName} + ' - ' + ${param.chapter != null ? param.chapter + '장' : '1장'}"
+          >
+          </a>
+
+          <button
+            class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarResponsive"
+            aria-controls="navbarResponsive"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            Menu
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div
+            class="collapse navbar-collapse"
+            id="navbarResponsive"
+            style="margin-top: 10px"
+          >
+            <div class="container ms-auto" style="padding: 0px">
+              <div class="row align-items-center">
+                <div class="dropdown col">
+                  <button
+                    class="btn btn-outline-primary dropdown-toggle"
+                    type="button"
+                    id="dropdownChapterButton"
+                    data-bs-toggle="dropdown"
+                  >
+                    장 찾기
+                  </button>
+                  <div
+                    class="dropdown-menu custom-dropdown"
+                    aria-labelledby="dropdownChapterButton"
+                  >
+                    <div class="dropdown-columns dropdownChapter row"></div>
+                  </div>
+                </div>
+
+                <div class="dropdown col">
+                  <button
+                    class="btn btn-outline-primary dropdown-toggle"
+                    type="button"
+                    id="dropdownVerseButton"
+                    data-bs-toggle="dropdown"
+                  >
+                    절 찾기
+                  </button>
+                  <div
+                    class="dropdown-menu custom-dropdown"
+                    aria-labelledby="dropdownVerseButton"
+                  >
+                    <div
+                      class="dropdown-columns dropdownVerse row nav-link"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <ul class="navbar-nav ms-auto" style="margin-top: 0px">
+              <li class="nav-item mx-0 mx-lg-1">
+                <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                  th:href="@{/bible/home}">
+                  Home
+                </a>
+              </li>
+              <li class="nav-item mx-0 mx-lg-1">
+                <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                   th:href="@{/bible/search}">
+                  Search
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <header style="margin-top: 5%"></header>
+
+      <section class="page-section">
+      <!-- 현재 장 표시 -->
+      <div
+        class="pb-2 mb-4 border-bottom border-danger text-center justify-content-center"
+      >
+        <h1
+          class="p-3"
+          id="currentChapter"
+          th:text="${param.chapter != null ? param.chapter + '장' : '1장'}"
+        ></h1>
+      </div>
+
+      <!-- 본문 -->
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-10">
+
+      <table class="table">
+        <tbody>
+          <tr th:each="dto : ${listDTOs}">
+            <th scope="row" th:id="${dto.verse}+'verse'">[[${dto.verse}]]절</th>
+            <td>[[${dto.content}]]</td>
+          </tr>
+        </tbody>
+      </table>
+
+        </div>
+      </div>
+
+      </section>
+
+      <!-- 자바스크립트 -->
+      <script th:inline="javascript">
+        $(document).ready(function() {
+
+          var dropdownVerse = $(".dropdownVerse");
+          var listDTOs = [[${listDTOs}]];
+          var activeItem = null;
+
+          listDTOs.forEach(function(item){
+            var link = $("<a></a>")
+              .addClass("dropdown-item")
+              .attr("href", "#" + item.verse + "verse")
+              .text(item.verse + "절")
+              .click(function(){
+                if(activeItem !== null) {
+                  activeItem.removeClass("active-verse");
+                }
+                activeItem = $("#"+item.verse+"verse").parent();
+                activeItem.addClass("active-verse");
+              });
+
+            dropdownVerse.append(link);
+          });
+
+          // URL로 이동시 해당 절에 활성화 클래스 추가
+          var anchor = window.location.hash.substring(1);
+          if (anchor) {
+            activeItem = $("#" + anchor).parent();
+            activeItem.addClass("active-verse");
+          }
+
+          var dropdownChapter = $(".dropdownChapter");
+          var chapters = [[${chaptersDTO.chapterList}]];
+          chapters.forEach(function(item){
+            var link = $("<a></a>")
+                .addClass("dropdown-item")
+                .attr("href", "/bible/list?book=" + [[${chaptersDTO.book}]] + "&chapter=" + item + "#page-top")
+                .text(item + "장");
+            dropdownChapter.append(link);
+          });
+
+          $("#dropdownVerseButton").on("click", function() {
+            $(".dropdown-menu").scrollTop(0); // 스크롤 위치 초기화
+          });
+
+        });
+      </script>
+
+      <!-- css -->
+      <style>
+        .custom-dropdown {
+          width: 250px;
+          max-height: 150px;
+          overflow-y: auto;
+        }
+        .dropdown-columns {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          align-items: flex-start;
+          margin: 0px;
+        }
+        .dropdown-item {
+          flex-basis: 33.33%;
+        }
+        .active-verse {
+          font-weight: bold;
+          color: red;
+        }
+
+        @media (max-width: 767px) {
+          .dropdown-item {
+            flex-basis: 50%;
+          }
+          .custom-dropdown {
+            width: 150px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        }
+      </style>
+    </th:block>
+  </th:block>
+</html>

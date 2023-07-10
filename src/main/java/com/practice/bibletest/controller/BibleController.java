@@ -18,7 +18,7 @@ import java.util.List;
 public class BibleController {
     private final BibleService bibleService;
 
-    @GetMapping("/")
+    @GetMapping
     public String index() {
         return "redirect:/bible/home";
     }

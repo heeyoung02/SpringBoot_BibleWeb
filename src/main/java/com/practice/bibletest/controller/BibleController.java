@@ -14,13 +14,12 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/bible")
 public class BibleController {
     private final BibleService bibleService;
 
     @GetMapping
     public String index() {
-        return "redirect:/bible/home";
+        return "redirect:/home";
     }
     @GetMapping("/home")
     public String home(Model model) {

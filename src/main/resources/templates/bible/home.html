@@ -71,7 +71,7 @@
     <div class="container text-center justify-content-center">
       <div class="row row-cols-2 row-cols-md-4 justify-content-md-center">
         <div class="col bookBox-mobile-link" th:each="bookDTO : ${bookDTOs}">
-          <a th:href="@{/bible/list(book=${bookDTO.book})}">
+          <a th:href="@{/list(book=${bookDTO.book})}">
             <span class="bookName-mobile-text" th:text="${bookDTO.book}"></span> -
             <span
                     class="bookName-mobile-text"
@@ -103,7 +103,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-8 col-xl-7">
         <!--검색-->
-        <form th:action="@{/bible/home}" method="post" id="searchForm">
+        <form th:action="@{/home}" method="post" id="searchForm">
           <div class="form-group">
             <label for="type">검색 유형</label>
             <select class="form-select" name="type" id="type" onchange="updatePlaceholder()">

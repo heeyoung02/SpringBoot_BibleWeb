@@ -17,20 +17,13 @@ import java.util.List;
 @RequestMapping("/bible")
 public class BibleController {
     private final BibleService bibleService;
-    @GetMapping("/test")
-    public void test() {
-        System.out.println("test mapping...........");
-    }
-    @GetMapping("/test2")
-    public void test2(Model model) {
-        System.out.println("test mapping222...........");
-        String txt = "please help me!!!!!!!!!!!!!!!!!!!!";
-        model.addAttribute("txt", txt);
-    }
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/bible/home";
+    }
     @GetMapping("/home")
     public String home(Model model) {
-        System.out.println("home mapping...........");
         List<BibleDTO> bookDTOs = bibleService.getBookDTOs();
         model.addAttribute("bookDTOs", bookDTOs);
         return "bible/home";

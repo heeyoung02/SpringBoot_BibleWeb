@@ -17,6 +17,10 @@ import java.util.List;
 @RequestMapping("/bible")
 public class BibleController {
     private final BibleService bibleService;
+    @GetMapping("/test")
+    public void test() {
+        System.out.println("test mapping...........");
+    }
 
     @GetMapping("/home")
     public String home(Model model) {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="@{~/layout/basic.html :: setContent(~{~{this} :: content})}">
+<th:block th:replace="~{@{~/layout/basic.html} :: setContent(~{~{this} :: content})}">
   <th:block th:fragment="content">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top"

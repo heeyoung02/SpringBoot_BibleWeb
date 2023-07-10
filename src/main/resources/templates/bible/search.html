@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{@{~/layout/basic.html} :: setContent(~{~{this} :: content})}">
+<th:block th:replace="@{~/layout/basic.html :: setContent(~{~{this} :: content})}">
+
   <th:block th:fragment="content">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top"
@@ -12,7 +13,7 @@
 
           <ul class="navbar-nav ms-auto" style="margin-top: 0px">
             <li class="nav-item mx-0 mx-lg-1">
-              <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/home}">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/bible/home}">
                 Home
               </a>
             </li>
@@ -27,7 +28,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-8 col-xl-7">
             <!--검색-->
-            <form th:action="@{/search}" method="post">
+            <form th:action="@{/bible/search}" method="post">
               <div class="form-group">
                 <label for="type">검색 유형</label>
                 <select class="form-select" name="type" id="type" onchange="updatePlaceholder()">
@@ -71,7 +72,7 @@
             <tbody>
             <tr th:each="bible : ${bibleList}">
               <td>
-                <a th:href="@{'/list?book=' + ${bible.book} + '&chapter=' + ${bible.chapter} + '#' + ${bible.verse} + 'verse'}">
+                <a th:href="@{'/bible/list?book=' + ${bible.book} + '&chapter=' + ${bible.chapter} + '#' + ${bible.verse} + 'verse'}">
                   <span th:text="${bible.bookName}"></span>
                 </a>
               </td>

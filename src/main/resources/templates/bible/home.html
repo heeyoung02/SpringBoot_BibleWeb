@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <th:block th:replace="~{/layout/basic.html :: setContent(~{this::content})}">
-    <th:block th:fragment="content">
-      <!-- Navigation-->
-      <nav
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>히딩코 성경웹</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" th:href="@{/assets/img/bible/openBook.png}" />
+  <!-- Font Awesome icons (free version)-->
+  <script th:src="@{https://use.fontawesome.com/releases/v6.3.0/js/all.js}" crossorigin="anonymous"></script>
+  <!-- Google fonts-->
+  <link th:href="@{https://fonts.googleapis.com/css?family=Montserrat:400,700}" rel="stylesheet" type="text/css" />
+  <link th:href="@{https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic}" rel="stylesheet" type="text/css" />
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link th:href="@{/css/styles.css}" rel="stylesheet" />
+  <!--jquery 라이브러리 불러오기-->
+  <script th:src="@{https://code.jquery.com/jquery-3.6.0.min.js}"></script>
+</head>
+
+<body id="page-top">
+<!-- Navigation-->
+<nav
         class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top"
         id="mainNav"
-      >
-        <div class="container">
-          <a class="navbar-brand" href="#page-top">Bible Web</a>
-          <button
+>
+  <div class="container">
+    <a class="navbar-brand" href="#page-top">Bible Web</a>
+    <button
             class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded"
             type="button"
             data-bs-toggle="collapse"
@@ -17,113 +35,113 @@
             aria-controls="navbarResponsive"
             aria-expanded="false"
             aria-label="Toggle navigation"
+    >
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#portfolio"
+          >성경 목록</a
           >
-            Menu
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item mx-0 mx-lg-1">
-                <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#portfolio"
-                  >성경 목록</a
-                >
-              </li>
-              <li class="nav-item mx-0 mx-lg-1">
-                <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact"
-                  >성경 검색</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- Masthead-->
-      <header class="masthead bg-primary text-white text-center">
-        <div class="container d-flex align-items-center flex-column">
-          <!-- Masthead Avatar Image-->
-          <img
+        </li>
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact"
+          >성경 검색</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Masthead-->
+<header class="masthead bg-primary text-white text-center">
+  <div class="container d-flex align-items-center flex-column">
+    <!-- Masthead Avatar Image-->
+    <img
             class="masthead-avatar mb-5"
             src="/assets/img/bible/openBook.png"
             alt="..."
-          />
-          <!-- Masthead Heading-->
-          <h1 class="masthead-heading text-uppercase mb-0">성경 읽기 홈</h1>
-        </div>
-      </header>
-      <!-- Portfolio Section-->
-      <section class="page-section portfolio" id="portfolio">
-        <div class="container">
-          <!-- Portfolio Section Heading-->
-          <h2
+    />
+    <!-- Masthead Heading-->
+    <h1 class="masthead-heading text-uppercase mb-0">성경 읽기 홈</h1>
+  </div>
+</header>
+<!-- Portfolio Section-->
+<section class="page-section portfolio" id="portfolio">
+  <div class="container">
+    <!-- Portfolio Section Heading-->
+    <h2
             class="page-section-heading text-center text-uppercase text-secondary mb-0"
-          >
-            성경 목록
-          </h2>
-          <!-- Icon Divider-->
-          <div class="divider-custom">
-            <div class="divider-custom-line"></div>
-            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-            <div class="divider-custom-line"></div>
-          </div>
-          <!-- Portfolio Grid Items-->
-          <div class="container text-center justify-content-center">
-            <div class="row row-cols-2 row-cols-md-4 justify-content-md-center">
-              <div class="col bookBox-mobile-link" th:each="bookDTO : ${bookDTOs}">
-                <a th:href="@{/bible/list(book=${bookDTO.book})}">
-                  <span class="bookName-mobile-text" th:text="${bookDTO.book}"></span> -
-                  <span
+    >
+      성경 목록
+    </h2>
+    <!-- Icon Divider-->
+    <div class="divider-custom">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+      <div class="divider-custom-line"></div>
+    </div>
+    <!-- Portfolio Grid Items-->
+    <div class="container text-center justify-content-center">
+      <div class="row row-cols-2 row-cols-md-4 justify-content-md-center">
+        <div class="col bookBox-mobile-link" th:each="bookDTO : ${bookDTOs}">
+          <a th:href="@{/bible/list(book=${bookDTO.book})}">
+            <span class="bookName-mobile-text" th:text="${bookDTO.book}"></span> -
+            <span
                     class="bookName-mobile-text"
                     th:text="${bookDTO.bookName}"
-                  ></span>
-                </a>
-              </div>
-            </div>
-          </div>
+            ></span>
+          </a>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <!-- Contact Section-->
-      <section class="page-section" id="contact">
-        <div class="container">
-          <!-- Contact Section Heading-->
-          <h2
+<!-- Contact Section-->
+<section class="page-section" id="contact">
+  <div class="container">
+    <!-- Contact Section Heading-->
+    <h2
             class="page-section-heading text-center text-uppercase text-secondary mb-0"
-          >
-            성경 찾기
-          </h2>
-          <!-- Icon Divider-->
-          <div class="divider-custom">
-            <div class="divider-custom-line"></div>
-            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-            <div class="divider-custom-line"></div>
+    >
+      성경 찾기
+    </h2>
+    <!-- Icon Divider-->
+    <div class="divider-custom">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+      <div class="divider-custom-line"></div>
+    </div>
+    <!-- Contact Section Form-->
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-7">
+        <!--검색-->
+        <form th:action="@{/bible/home}" method="post" id="searchForm">
+          <div class="form-group">
+            <label for="type">검색 유형</label>
+            <select class="form-select" name="type" id="type" onchange="updatePlaceholder()">
+              <option>-------------------------</option>
+              <option value="content">본문 내용</option>
+              <option value="bcv">목록 이름 + 장 + 절</option>
+            </select>
           </div>
-          <!-- Contact Section Form-->
-          <div class="row justify-content-center">
-            <div class="col-lg-8 col-xl-7">
-              <!--검색-->
-              <form th:action="@{/bible/home}" method="post" id="searchForm">
-                <div class="form-group">
-                  <label for="type">검색 유형</label>
-                  <select class="form-select" name="type" id="type" onchange="updatePlaceholder()">
-                    <option>-------------------------</option>
-                    <option value="content">본문 내용</option>
-                    <option value="bcv">목록 이름 + 장 + 절</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="keyword">키워드</label>
-                  <input class="form-control" name="keyword" id="keyword" placeholder="띄어쓰기를 기준으로 나뉜 단어를 조합하여 검색됩니다.">
-                </div>
-                <div class="text-center">
-                  <button class="btn btn-outline-secondary btn-search" type="submit">Search</button>
-                </div>
-              </form>
-            </div>
+          <div class="form-group">
+            <label for="keyword">키워드</label>
+            <input class="form-control" name="keyword" id="keyword" placeholder="띄어쓰기를 기준으로 나뉜 단어를 조합하여 검색됩니다.">
           </div>
+          <div class="text-center">
+            <button class="btn btn-outline-secondary btn-search" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-        </div>
-      </section>
-      <style>
+  </div>
+</section>
+<style>
         @media (max-width: 767px) {
           .bookBox-mobile-link {
             font-size: 1.2rem;
@@ -142,7 +160,7 @@
         }
       </style>
 
-      <script>
+<script>
   function updatePlaceholder() {
     var typeSelect = document.getElementById('type');
     var keywordInput = document.getElementById('keyword');
@@ -155,7 +173,24 @@
     }
   }
 </script>
+</body>
 
-    </th:block>
-  </th:block>
+<!-- Footer-->
+<footer class="footer text-center">
+  <div class="container">
+    <div class="row">
+    </div>
+  </div>
+</footer>
+<!-- Copyright Section-->
+<div class="copyright py-4 text-center text-white">
+  <div class="container"><small>Copyright &copy; Heedingco 2023</small></div>
+</div>
+
+
+<!-- Bootstrap core JS-->
+<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<!-- Core theme JS-->
+<script th:src="@{/js/scripts.js}"></script>
+
 </html>

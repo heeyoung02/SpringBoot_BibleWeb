@@ -18,7 +18,6 @@ public class BibleController {
 
     @GetMapping("/")
     public String home(Model model) {
-        System.out.println("home mapping...........");
         List<BibleDTO> bookDTOs = bibleService.getBookDTOs();
         model.addAttribute("bookDTOs", bookDTOs);
         return "bible/home";

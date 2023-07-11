@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="@{~/layout/basic.html :: setContent(~{~{this} :: content})}">
+<th:block th:replace="~{layout/basic :: setContent(~{this::content})}">
+
 
     <th:block th:fragment="content">
       <!-- Navigation-->
@@ -77,13 +78,13 @@
             <ul class="navbar-nav ms-auto" style="margin-top: 0px">
               <li class="nav-item mx-0 mx-lg-1">
                 <a class="nav-link py-3 px-0 px-lg-3 rounded"
-                  th:href="@{/bible/home}">
+                  th:href="@{/}">
                   Home
                 </a>
               </li>
               <li class="nav-item mx-0 mx-lg-1">
                 <a class="nav-link py-3 px-0 px-lg-3 rounded"
-                   th:href="@{/bible/search}">
+                   th:href="@{/search}">
                   Search
                 </a>
               </li>
@@ -160,7 +161,7 @@
           chapters.forEach(function(item){
             var link = $("<a></a>")
                 .addClass("dropdown-item")
-                .attr("href", "/bible/list?book=" + [[${chaptersDTO.book}]] + "&chapter=" + item + "#page-top")
+                .attr("href", "/list?book=" + [[${chaptersDTO.book}]] + "&chapter=" + item + "#page-top")
                 .text(item + "장");
             dropdownChapter.append(link);
           });

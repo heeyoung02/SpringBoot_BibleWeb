@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}"
+      layout:fragment="Content">
 <body>
-<th:block th:fragment="setContent1(testContent)">
-<h1> test world!!!!!!!!!!!</h1>
-</th:block>
+<h1>hello</h1>
+<h2 th:text="${txt}"></h2>
 </body>
 </html>

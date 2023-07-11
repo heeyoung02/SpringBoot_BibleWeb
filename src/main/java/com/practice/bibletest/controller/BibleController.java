@@ -13,28 +13,17 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/bible")
 public class BibleController {
     private final BibleService bibleService;
-    @GetMapping("/test")
-    public void test() {
-        System.out.println("test mapping...........");
-    }
-    @GetMapping("/test2")
-    public void test2(Model model) {
-        System.out.println("test mapping222...........");
-        String txt = "please help me!!!!!!!!!!!!!!!!!!!!";
-        model.addAttribute("txt", txt);
-    }
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String home(Model model) {
         System.out.println("home mapping...........");
         List<BibleDTO> bookDTOs = bibleService.getBookDTOs();
         model.addAttribute("bookDTOs", bookDTOs);
         return "bible/home";
     }
-    @PostMapping("/home")
+    @PostMapping("/")
     public String search(SearchDTO searchDTO, RedirectAttributes redirectAttributes) {
         List<BibleDTO> bibleList = bibleService.getSearch(searchDTO);
         redirectAttributes.addFlashAttribute("bibleList", bibleList);

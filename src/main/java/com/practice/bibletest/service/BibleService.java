@@ -93,23 +93,25 @@ public class BibleService {
     }
 
     private BibleDTO searchBCV(String keyword) {
-        if (keyword.trim().isEmpty() || keyword == null) return null;
+        if (keyword == null || keyword.trim().isEmpty()) return null;
 
-        String[] splitKeyword = keyword.split(" "); // ex) 창세기 1장 1절
-        if(splitKeyword.length != 3) return null;
+        String[] splitKeyword = keyword.split(" ");
+        if (splitKeyword.length != 3) return null;
 
         int book = getBookNumber(splitKeyword[0]);
-        // 정규식만 사용하여 숫자만 추출
-        int chapter = Integer.parseInt(splitKeyword[1].replaceAll("\\D+", ""));
-        int verse = Integer.parseInt(splitKeyword[2].replaceAll("\\D+", ""));
-        if(book<=0 || chapter<=0 || verse<=0) return null;
+        int chapter = extractNumber(splitKeyword[1]);
+        int verse = extractNumber(splitKeyword[2]);
+
+        if (book <= 0 || chapter <= 0 || verse <= 0) return null;
 
         BibleKorhrv resultData = bibleRepository.findByBookAndChapterAndVerse(book, chapter, verse);
-        if(resultData == null) return null;
-
-        return entityToDTO(resultData);
+        return resultData != null ? entityToDTO(resultData) : null;
     }
 
+    private int extractNumber(String str) { // 숫자 추출 로직. 추출숫자가 없다면 -1 반환
+        String numberString = str.replaceAll("\\D+", "");
+        return numberString.isEmpty() ? -1 : Integer.parseInt(numberString);
+    }
     private List<BibleDTO> entityToDTOList(List<BibleKorhrv> entities) { // entities->DTOs 변환
         return entities.stream()
                 .map(this::entityToDTO)

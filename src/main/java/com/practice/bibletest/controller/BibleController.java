@@ -22,13 +22,6 @@ public class BibleController {
         model.addAttribute("bookDTOs", bookDTOs);
         return "bible/home";
     }
-    @PostMapping("/")
-    public String search(SearchDTO searchDTO, RedirectAttributes redirectAttributes) {
-        List<BibleDTO> bibleList = bibleService.getSearch(searchDTO);
-        redirectAttributes.addFlashAttribute("bibleList", bibleList);
-        redirectAttributes.addFlashAttribute("inputKeyword", searchDTO.getKeyword());
-        return "redirect:search";
-    }
     @GetMapping("/list")
     public String list(@RequestParam("book") int book, @RequestParam(value = "chapter", defaultValue = "1") int chapter, Model model) {
         BibleDTO chaptersDTO = bibleService.getChaptersDTO(book);

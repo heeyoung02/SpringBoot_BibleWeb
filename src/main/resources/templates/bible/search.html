@@ -23,29 +23,13 @@
       </div>
     </nav>
     <header style="margin-top: 5%"></header>
-      <!--검색-->
     <section class="page-section border-bottom border-danger">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-8 col-xl-7">
             <!--검색-->
-            <form th:action="@{/search}" method="post">
-              <div class="form-group">
-                <label for="type">검색 유형</label>
-                <select class="form-select" name="type" id="type" onchange="updatePlaceholder()">
-                  <option>-------------------------</option>
-                  <option value="content">본문 내용</option>
-                  <option value="bcv">목록 이름 + 장 + 절</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="keyword">키워드</label>
-                <input class="form-control" name="keyword" id="keyword" placeholder="띄어쓰기를 기준으로 나뉜 단어를 조합하여 검색됩니다.">
-              </div>
-              <div class="text-center">
-                <button class="btn btn-outline-secondary btn-search" type="submit">Search</button>
-              </div>
-            </form>
+            <th:block th:replace="~{layout/searchForm :: searchContent}">
+            </th:block>
           </div>
         </div>
       </div>
@@ -95,15 +79,6 @@
       width: 100%;
       margin: 0 auto;
     }
-    .form-group {
-      margin-bottom: 10px;
-    }
-
-    @media (max-width: 767px) {
-      input::placeholder {
-        font-size: 12px;
-      }
-    }
     </style>
 
     <!-- 자바스크립트 -->
@@ -117,7 +92,6 @@
           searchContent.highlightText(keyword);
         });
       }
-
      });
 
      // 본문에서 검색한 단어에 해당하는 문자들의 스타일을 변경
@@ -129,20 +103,8 @@
           return "<span style='color: " + highlightColor + "'>" + matched + "</span>";
         });
       });
-    };
+     };
 
-    // 선택한 type값에 따른 placeholder 내용
-      function updatePlaceholder() {
-    var typeSelect = document.getElementById('type');
-    var keywordInput = document.getElementById('keyword');
-    var selectedType = typeSelect.value;
-
-    if (selectedType === 'content') {
-      keywordInput.placeholder = 'ex) 하나님 아버지 => "하나님"과"아버지"가 포함되는 본문 검색';
-    } else if (selectedType === 'bcv') {
-      keywordInput.placeholder = 'ex) 창세기 1장 1절 or 창세기 1 2';
-    }
-  }
     </script>
 
   </th:block>

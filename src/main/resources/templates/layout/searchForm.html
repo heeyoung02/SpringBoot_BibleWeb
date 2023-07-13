@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="searchContent">
+
+  <form th:action="@{/search}" method="post" id="searchForm" onsubmit="return validateForm()">
+    <div class="form-group">
+      <label for="type">검색 유형</label>
+      <select class="form-select" name="type" id="type" onchange="updatePlaceholder()">
+        <option value="">-------------------------</option>
+        <option value="content">본문 내용</option>
+        <option value="bcv">목록 이름 + 장 + 절</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="keyword">키워드</label>
+      <input class="form-control" name="keyword" id="keyword" placeholder="띄어쓰기를 기준으로 나뉜 단어를 조합하여 검색됩니다.">
+    </div>
+    <div class="text-center">
+      <button class="btn btn-outline-secondary btn-search" type="submit">Search</button>
+    </div>
+  </form>
+
+  <style>
+        @media (max-width: 767px) {
+          input::placeholder {
+            font-size: 12px;
+          }
+        }
+
+        .form-group {
+          margin-bottom: 10px;
+        }
+  </style>
+  <script>
+  function updatePlaceholder() {
+    var typeSelect = document.getElementById('type');
+    var keywordInput = document.getElementById('keyword');
+    var selectedType = typeSelect.value;
+
+    if (selectedType === 'content') {
+      keywordInput.placeholder = 'ex) 하나님 아버지 => "하나님"과"아버지"가 포함되는 본문 검색';
+    } else if (selectedType === 'bcv') {
+      keywordInput.placeholder = 'ex) 창세기 1장 1절 or 창세기 1 2';
+    }
+  }
+
+  function validateForm() {
+    var selectedOption = document.getElementById("type").value;
+    if (selectedOption === "") {
+      var label = document.querySelector("label[for='type']");
+      label.style.color = "red";
+      label.textContent = "검색 유형을 선택하세요";
+      return false;
+    }
+    return true;
+  }
+</script>
+</th:block>
+</html>

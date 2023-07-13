@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{layout/basic :: setContent(~{this::content})}">
-
-
+  <th:block th:replace="~{layout/basic :: setContent(~{this::content})}">
     <th:block th:fragment="content">
       <!-- Navigation-->
       <nav
@@ -77,14 +75,15 @@
 
             <ul class="navbar-nav ms-auto" style="margin-top: 0px">
               <li class="nav-item mx-0 mx-lg-1">
-                <a class="nav-link py-3 px-0 px-lg-3 rounded"
-                  th:href="@{/}">
+                <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/}">
                   Home
                 </a>
               </li>
               <li class="nav-item mx-0 mx-lg-1">
-                <a class="nav-link py-3 px-0 px-lg-3 rounded"
-                   th:href="@{/search}">
+                <a
+                  class="nav-link py-3 px-0 px-lg-3 rounded"
+                  th:href="@{/search}"
+                >
                   Search
                 </a>
               </li>
@@ -96,39 +95,49 @@
       <header style="margin-top: 5%"></header>
 
       <section class="page-section">
-      <!-- 현재 장 표시 -->
-      <div
-        class="pb-2 mb-4 border-bottom border-danger text-center justify-content-center"
-      >
-        <h1
-          class="p-3"
-          id="currentChapter"
-          th:text="${param.chapter != null ? param.chapter + '장' : '1장'}"
-        ></h1>
-      </div>
-
-      <!-- 본문 -->
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-10">
-
-      <table class="table">
-        <tbody>
-          <tr th:each="dto : ${listDTOs}">
-            <th scope="row" th:id="${dto.verse}+'verse'">[[${dto.verse}]]절</th>
-            <td>[[${dto.content}]]</td>
-          </tr>
-        </tbody>
-      </table>
-
+        <!-- 현재 장 표시 -->
+        <div
+          class="pb-2 mb-4 border-bottom border-danger text-center justify-content-center"
+        >
+          <h1
+            class="p-3"
+            id="currentChapter"
+            th:text="${param.chapter != null ? param.chapter + '장' : '1장'}"
+          ></h1>
         </div>
-      </div>
 
+        <!-- 본문 -->
+        <div class="justify-content-center">
+          <div class="col-lg-10 col-xl-10">
+            <table class="table">
+              <tbody>
+                <tr th:each="dto : ${listDTOs}">
+                  <th scope="row" th:id="${dto.verse}+'verse'">
+                    [[${dto.verse}]]절
+                  </th>
+                  <td>[[${dto.content}]]</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="position-fixed bottom-0 start-0 mb-4 ms-4">
+          <button class="btn btn-primary prevBtn" onclick="movePrev()">
+            이전 장
+          </button>
+        </div>
+
+        <div class="position-fixed bottom-0 end-0 mb-4 me-4">
+          <button class="btn btn-primary nextBtn" onclick="moveNext()">
+            다음 장
+          </button>
+        </div>
       </section>
 
       <!-- 자바스크립트 -->
       <script th:inline="javascript">
         $(document).ready(function() {
-
           var dropdownVerse = $(".dropdownVerse");
           var listDTOs = [[${listDTOs}]];
           var activeItem = null;
@@ -169,8 +178,26 @@
           $("#dropdownVerseButton").on("click", function() {
             $(".dropdown-menu").scrollTop(0); // 스크롤 위치 초기화
           });
+        }); // end ready
 
-        });
+        // 이전 장, 다음 장
+        var currentChapter = parseInt([[${param.chapter} != null ? ${param.chapter} : 1]]);
+        var totalChapters = [[${chaptersDTO.chapterCount}]];
+        var prevBtn = document.querySelector(".prevBtn");
+        var nextBtn = document.querySelector(".nextBtn");
+        // 첫번째, 마지막 장이면 버튼 비활성화
+        if (currentChapter === 1) prevBtn.disabled = true;
+        if (currentChapter === totalChapters) nextBtn.disabled = true;
+        // 버튼 클릭 이벤트
+        function movePrev() {
+          var href = "/list?book=" + [[${chaptersDTO.book}]] + "&chapter=" + (currentChapter - 1);
+          window.location.href = href + "#page-top";
+        }
+        function moveNext() {
+          var href = "/list?book=" + [[${chaptersDTO.book}]] + "&chapter=" + (currentChapter + 1);
+          window.location.href = href + "#page-top";
+        }
+
       </script>
 
       <!-- css -->
@@ -203,7 +230,7 @@
             width: 150px;
             max-height: 150px;
             overflow-y: auto;
-        }
+          }
         }
       </style>
     </th:block>

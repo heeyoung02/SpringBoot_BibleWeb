@@ -13,8 +13,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,29 +59,28 @@ public class BibleService {
     // 검색관련
     public List<BibleDTO> getSearch(SearchDTO searchDTO) {
         String type = searchDTO.getType();
-        String keyword = searchDTO.getKeyword();
+        List<String> keywords = searchDTO.getKeywords();
         List<BibleDTO> result = new ArrayList<>();
+        if(keywords.isEmpty())
+            return result;
+
         if(type.contains("content")) {
-            if(searchContent(keyword) != null)
-                result = searchContent(keyword);
+            List<BibleDTO> contentResult = searchContent(keywords);
+            result = (contentResult != null) ? contentResult : result;
         }
         if(type.contains("bcv")) {
-            if(searchBCV(keyword) != null)
-                result.add(searchBCV(keyword));
+            BibleDTO bcvResult = searchBCV(keywords);
+            if(bcvResult != null)
+                result.add(bcvResult);
         }
         return result; // 잘못된 값이 입력되면 빈 List 반환
     }
-    private List<BibleDTO> searchContent(String keyword) {
-        if (keyword.trim().isEmpty()) {
-            return null;
-        }
+
+    private List<BibleDTO> searchContent(List<String> keywords) {
         Pageable pageable = Pageable.unpaged();
         BooleanBuilder builder = new BooleanBuilder();
         QBibleKorhrv qBibleKorhrv = QBibleKorhrv.bibleKorhrv;
 
-        List<String> keywords = Arrays.stream(keyword.split("\\s+"))
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
         for (String word : keywords) {
             BooleanExpression expression = qBibleKorhrv.content.contains(word);
             builder.and(expression);
@@ -92,15 +89,13 @@ public class BibleService {
         return entityToDTOList(result.getContent());
     }
 
-    private BibleDTO searchBCV(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) return null;
+    private BibleDTO searchBCV(List<String> keywords) {
 
-        String[] splitKeyword = keyword.split(" ");
-        if (splitKeyword.length != 3) return null;
+        if (keywords.size() != 3) return null;
 
-        int book = getBookNumber(splitKeyword[0]);
-        int chapter = extractNumber(splitKeyword[1]);
-        int verse = extractNumber(splitKeyword[2]);
+        int book = getBookNumber(keywords.get(0));
+        int chapter = extractNumber(keywords.get(1));
+        int verse = extractNumber(keywords.get(2));
 
         if (book <= 0 || chapter <= 0 || verse <= 0) return null;
 

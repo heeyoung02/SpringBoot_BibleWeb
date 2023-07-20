@@ -32,11 +32,6 @@ public class BibleController {
     }
     @GetMapping("/search")
     public String searchResult(Model model) {
-        @SuppressWarnings("unchecked")
-        List<BibleDTO> bibleList = (List<BibleDTO>) model.getAttribute("bibleList");
-        String inputKeyword = (String) model.getAttribute("inputKeyword");
-        model.addAttribute("bibleList", bibleList);
-        model.addAttribute("inputKeyword", inputKeyword);
         return "bible/search";
     }
     @PostMapping("/search")
@@ -44,6 +39,8 @@ public class BibleController {
         List<BibleDTO> bibleList = bibleService.getSearch(searchDTO);
         redirectAttributes.addFlashAttribute("bibleList", bibleList);
         redirectAttributes.addFlashAttribute("inputKeyword", searchDTO.getKeyword());
+        redirectAttributes.addFlashAttribute("inputKeywords", searchDTO.getKeywords());
         return "redirect:search";
     }
+
 }

@@ -85,11 +85,10 @@
     <script th:inline="javascript">
      $(document).ready(function() {
       var searchContent = $(".searchContent");
-      var inputKeyword = [[${inputKeyword}]];
-      if(inputKeyword != null) {
-        var keywords = inputKeyword.split(" ");
-        $.each(keywords, function(index, keyword) {
-          searchContent.highlightText(keyword);
+      var inputKeywords = [[${inputKeywords}]];
+      if(inputKeywords != null) {
+        inputKeywords.forEach(element => {
+          searchContent.highlightText(element);
         });
       }
      });

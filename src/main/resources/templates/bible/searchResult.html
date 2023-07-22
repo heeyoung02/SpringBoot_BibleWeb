@@ -1,0 +1,135 @@
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{layout/basic :: setContent(~{this::content})}">
+
+
+  <th:block th:fragment="content">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top"
+         id="mainNav">
+      <div class="container">
+        <a class="navbar-brand bookName" href="#page-top">
+          검색
+        </a>
+
+        <ul class="navbar-nav ms-auto" style="margin-top: 0px">
+          <li class="nav-item mx-0 mx-lg-1">
+            <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/}">
+              Home
+            </a>
+          </li>
+        </ul>
+      </div>
+      </div>
+    </nav>
+    <header style="margin-top: 5%"></header>
+    <section class="page-section border-bottom border-danger">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-7">
+            <!--검색-->
+            <th:block th:replace="~{layout/searchForm :: searchContent}">
+            </th:block>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 검색 결과 표시 -->
+    <div class="pb-2 mb-4 border-bottom text-center justify-content-center" id="resultBox">
+      <div style="margin-top: 20px; display: flex; justify-content: center;"
+           th:if="${pageRequestDTO != null}">
+        <h3 style="color: blue;">"[[${pageRequestDTO.keyword}]]"</h3> <h3> 에 대한</h3>
+      </div>
+      <h1 style="margin-bottom: 20px; margin-top: 20px;">검색 결과</h1>
+      <h5 th:text="'검색 총 갯수 : ' + (${result != null ? result.totalData : 0}) + '개'"></h5>
+      <div th:if="${result != null}" class="container-fluid">
+        <div class="result-box table-responsive">
+          <table class="table">
+            <thead>
+            <tr>
+              <th>성경</th>
+              <th>장</th>
+              <th>절</th>
+              <th>본문</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bible : ${result.dtoList}">
+              <td>
+                <a th:href="@{'/list?book=' + ${bible.book} + '&chapter=' + ${bible.chapter} + '#' + ${bible.verse} + 'verse'}">
+                  <span th:text="${bible.bookName}"></span>
+                </a>
+              </td>
+              <td th:text="${bible.chapter}+'장'"></td>
+              <td th:text="${bible.verse}+'절'"></td>
+              <td th:text="${bible.content}" class="searchContent"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!--페이지 태그-->
+        <ul class="pagination h-100 justify-content-center align-items-center">
+          <li class="page-item" th:if="${result.prev}">
+            <a class="page-link" th:href="@{/searchResult(page=${result.start-1},
+         type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}" tabindex="-1">이전</a>
+          </li>
+          <li th:class="'page-item ' + ${result.page == page?'active':''}"
+              th:each="page: ${result.pageList}">
+            <a class="page-link" th:href="@{/searchResult(page=${page},
+        type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">
+              [[${page}]]
+            </a>
+          </li>
+          <li class="page-item" th:if="${result.next}">
+            <a class="page-link" th:href="@{/searchResult(page=${result.end+1},
+        type=${pageRequestDTO.type}, keyword=${pageRequestDTO.keyword})}">다음</a>
+          </li>
+        </ul>
+
+
+      </div>
+    </div>
+
+    <!-- 스타일 -->
+    <style>
+    .result-box {
+      max-height: 500px;
+      overflow-y: auto;
+      width: 100%;
+      margin: 0 auto;
+    }
+    </style>
+
+    <!-- 자바스크립트 -->
+    <script th:inline="javascript">
+     $(document).ready(function() {
+      var searchContent = $(".searchContent");
+      var inputKeywords = [[${pageRequestDTO.keywords}]];
+      if(inputKeywords != null) {
+        inputKeywords.forEach(element => {
+          searchContent.highlightText(element);
+        });
+      }
+     });
+
+     // 본문에서 검색한 단어에 해당하는 문자들의 스타일을 변경
+     $.fn.highlightText = function(text) {
+      var highlightColor = "blue";
+      var regex = new RegExp(text, "gi");
+      this.html(function(_, html) {
+        return html.replace(regex, function(matched) {
+          return "<span style='color: " + highlightColor + "'>" + matched + "</span>";
+        });
+      });
+     };
+
+
+
+    </script>
+  </th:block>
+</th:block>
+</html>

@@ -1,18 +1,19 @@
 package com.practice.bibletest.controller;
 
 import com.practice.bibletest.dto.BibleDTO;
-import com.practice.bibletest.dto.SearchDTO;
+import com.practice.bibletest.dto.PageRequestDTO;
 import com.practice.bibletest.service.BibleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class BibleController {
     private final BibleService bibleService;
 
@@ -31,16 +32,14 @@ public class BibleController {
         return "bible/list";
     }
     @GetMapping("/search")
-    public String searchResult(Model model) {
+    public String search() {
         return "bible/search";
     }
-    @PostMapping("/search")
-    public String postSearch(SearchDTO searchDTO, RedirectAttributes redirectAttributes) {
-        List<BibleDTO> bibleList = bibleService.getSearch(searchDTO);
-        redirectAttributes.addFlashAttribute("bibleList", bibleList);
-        redirectAttributes.addFlashAttribute("inputKeyword", searchDTO.getKeyword());
-        redirectAttributes.addFlashAttribute("inputKeywords", searchDTO.getKeywords());
-        return "redirect:search";
-    }
 
+    @GetMapping("/searchResult")
+    public String testResult(PageRequestDTO pageRequestDTO, Model model) {
+        log.info("requestDTO is...." + pageRequestDTO);
+        model.addAttribute("result", bibleService.getSearchPage(pageRequestDTO));
+        return "bible/searchResult";
+    }
 }

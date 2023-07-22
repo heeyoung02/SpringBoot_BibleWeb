@@ -2,7 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{layout/basic :: setContent(~{this::content})}">
 
-
   <th:block th:fragment="content">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top"
@@ -12,14 +11,14 @@
           검색
         </a>
 
-          <ul class="navbar-nav ms-auto" style="margin-top: 0px">
-            <li class="nav-item mx-0 mx-lg-1">
-              <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/}">
-                Home
-              </a>
-            </li>
-          </ul>
-        </div>
+        <ul class="navbar-nav ms-auto" style="margin-top: 0px">
+          <li class="nav-item mx-0 mx-lg-1">
+            <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/}">
+              Home
+            </a>
+          </li>
+        </ul>
+      </div>
       </div>
     </nav>
     <header style="margin-top: 5%"></header>
@@ -30,82 +29,47 @@
             <!--검색-->
             <th:block th:replace="~{layout/searchForm :: searchContent}">
             </th:block>
+
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 검색 결과 표시 -->
-    <div class="pb-2 mb-4 border-bottom text-center justify-content-center">
-      <div style="margin-top: 20px; display: flex; justify-content: center;"
-           th:if="${inputKeyword != null}">
-        <h3 style="color: blue;">"[[${inputKeyword}]]"</h3> <h3> 에 대한</h3>
-      </div>
-      <h1 style="margin-bottom: 20px; margin-top: 20px;">검색 결과</h1>
-      <h5 th:text="'검색 총 갯수 : ' + (${bibleList != null ? #lists.size(bibleList) : 0}) + '개'"></h5>
-      <div class="container-fluid">
-        <div class="result-box table-responsive">
-          <table class="table">
-            <thead>
-            <tr>
-              <th>성경</th>
-              <th>장</th>
-              <th>절</th>
-              <th>본문</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="bible : ${bibleList}">
-              <td>
-                <a th:href="@{'/list?book=' + ${bible.book} + '&chapter=' + ${bible.chapter} + '#' + ${bible.verse} + 'verse'}">
-                  <span th:text="${bible.bookName}"></span>
-                </a>
-              </td>
-              <td th:text="${bible.chapter}+'장'"></td>
-              <td th:text="${bible.verse}+'절'"></td>
-              <td th:text="${bible.content}" class="searchContent"></td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 스타일 -->
     <style>
-    .result-box {
-      max-height: 500px;
-      overflow-y: auto;
-      width: 100%;
-      margin: 0 auto;
+        @media (max-width: 767px) {
+          input::placeholder {
+            font-size: 12px;
+          }
+        }
+
+        .form-group {
+          margin-bottom: 10px;
+        }
+  </style>
+    <script>
+  function updatePlaceholder() {
+    var typeSelect = document.getElementById('type');
+    var keywordInput = document.getElementById('keyword');
+    var selectedType = typeSelect.value;
+
+    if (selectedType === 'content') {
+      keywordInput.placeholder = 'ex) 하나님 아버지 => "하나님"과"아버지"가 포함되는 본문 검색';
+    } else if (selectedType === 'bcv') {
+      keywordInput.placeholder = 'ex) 창세기 1장 1절 or 창세기 1 2';
     }
-    </style>
+  }
 
-    <!-- 자바스크립트 -->
-    <script th:inline="javascript">
-     $(document).ready(function() {
-      var searchContent = $(".searchContent");
-      var inputKeywords = [[${inputKeywords}]];
-      if(inputKeywords != null) {
-        inputKeywords.forEach(element => {
-          searchContent.highlightText(element);
-        });
-      }
-     });
-
-     // 본문에서 검색한 단어에 해당하는 문자들의 스타일을 변경
-     $.fn.highlightText = function(text) {
-      var highlightColor = "blue";
-      var regex = new RegExp(text, "gi");
-      this.html(function(_, html) {
-        return html.replace(regex, function(matched) {
-          return "<span style='color: " + highlightColor + "'>" + matched + "</span>";
-        });
-      });
-     };
-
-    </script>
-
+  function validateForm() {
+    var selectedOption = document.getElementById("type").value;
+    if (selectedOption === "") {
+      var label = document.querySelector("label[for='type']");
+      label.style.color = "red";
+      label.textContent = "검색 유형을 선택하세요";
+      return false;
+    }
+    return true;
+  }
+</script>
   </th:block>
 </th:block>
 </html>

@@ -1,7 +1,8 @@
 package com.practice.bibletest.service;
 
 import com.practice.bibletest.dto.BibleDTO;
-import com.practice.bibletest.dto.SearchDTO;
+import com.practice.bibletest.dto.PageRequestDTO;
+import com.practice.bibletest.dto.PageResultDTO;
 import com.practice.bibletest.entity.BibleKorhrv;
 import com.practice.bibletest.entity.QBibleKorhrv;
 import com.practice.bibletest.repository.BibleRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,51 +58,36 @@ public class BibleService {
         return result;
     }
 
-    // 검색관련
-    public List<BibleDTO> getSearch(SearchDTO searchDTO) {
-        String type = searchDTO.getType();
-        List<String> keywords = searchDTO.getKeywords();
-        List<BibleDTO> result = new ArrayList<>();
-        if(keywords.isEmpty())
-            return result;
-
-        if(type.contains("content")) {
-            List<BibleDTO> contentResult = searchContent(keywords);
-            result = (contentResult != null) ? contentResult : result;
-        }
-        if(type.contains("bcv")) {
-            BibleDTO bcvResult = searchBCV(keywords);
-            if(bcvResult != null)
-                result.add(bcvResult);
-        }
-        return result; // 잘못된 값이 입력되면 빈 List 반환
-    }
-
-    private List<BibleDTO> searchContent(List<String> keywords) {
-        Pageable pageable = Pageable.unpaged();
+    // 검색
+    public PageResultDTO<BibleDTO, BibleKorhrv> getSearchPage(PageRequestDTO requestDTO) {
+        Pageable pageable = requestDTO.getPageable(Sort.by("id").ascending());
         BooleanBuilder builder = new BooleanBuilder();
         QBibleKorhrv qBibleKorhrv = QBibleKorhrv.bibleKorhrv;
+        List<String> keywords = requestDTO.getKeywords();
+        String type = requestDTO.getType();
 
-        for (String word : keywords) {
-            BooleanExpression expression = qBibleKorhrv.content.contains(word);
-            builder.and(expression);
+        if (type != null && !keywords.isEmpty()) {
+            if (type.contains("content")) {
+                for (String word : keywords) {
+                    BooleanExpression expression = qBibleKorhrv.content.contains(word);
+                    builder.and(expression);
+                }
+            } else if (type.contains("bcv") && keywords.size() == 3) {
+                int book = getBookNumber(keywords.get(0));
+                int chapter = extractNumber(keywords.get(1));
+                int verse = extractNumber(keywords.get(2));
+
+                if (book > 0 && chapter > 0 && verse > 0) {
+                    builder.and(qBibleKorhrv.book.eq(book));
+                    builder.and(qBibleKorhrv.chapter.eq(chapter));
+                    builder.and(qBibleKorhrv.verse.eq(verse));
+                }
+            }
         }
+
         Page<BibleKorhrv> result = bibleRepository.findAll(builder, pageable);
-        return entityToDTOList(result.getContent());
-    }
-
-    private BibleDTO searchBCV(List<String> keywords) {
-
-        if (keywords.size() != 3) return null;
-
-        int book = getBookNumber(keywords.get(0));
-        int chapter = extractNumber(keywords.get(1));
-        int verse = extractNumber(keywords.get(2));
-
-        if (book <= 0 || chapter <= 0 || verse <= 0) return null;
-
-        BibleKorhrv resultData = bibleRepository.findByBookAndChapterAndVerse(book, chapter, verse);
-        return resultData != null ? entityToDTO(resultData) : null;
+        Function<BibleKorhrv, BibleDTO> fn = this::entityToDTO; // 메서드 레퍼런스 사용
+        return new PageResultDTO<>(result, fn);
     }
 
     private int extractNumber(String str) { // 숫자 추출 로직. 추출숫자가 없다면 -1 반환

@@ -3,22 +3,35 @@ package com.practice.bibletest.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.util.StringUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+
 @Builder
 @AllArgsConstructor
 @Data
-public class SearchDTO {
-    private String type; // 검색 조건 (book-chapter-verse 조합 / content 단어 조합)
+public class PageRequestDTO {
+    private int page;
+    private int size;
+    private String type;
     private String keyword;
-    private List<String> keywords;
 
+    public PageRequestDTO() {
+        this.page = 1;
+        this.size = 100;
+    }
+    public Pageable getPageable(Sort sort) {
+        return PageRequest.of(page -1, size, sort);
+    }
+
+    private List<String> keywords;
     public List<String> getKeywords() {
-        if (keywords == null) {
+        if (keywords == null && keyword != null) {
             String trimmedKeyword = keyword.trim();
             if (!trimmedKeyword.isEmpty()) {
                 keywords = Arrays.asList(trimmedKeyword.split("\\s+"));
@@ -28,4 +41,5 @@ public class SearchDTO {
         }
         return keywords;
     }
+
 }

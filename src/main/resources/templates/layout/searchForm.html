@@ -2,8 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="searchContent">
 
-  <form th:action="@{/search}" method="post" id="searchForm" onsubmit="return validateForm()">
+  <form th:action="@{/searchResult}" method="get" id="searchForm" onsubmit="return validateForm()">
     <div class="form-group">
+      <input type="hidden" name="page" value="1">
       <label for="type">검색 유형</label>
       <select class="form-select" name="type" id="type" onchange="updatePlaceholder()">
         <option value="">-------------------------</option>

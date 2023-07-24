@@ -60,34 +60,34 @@ public class BibleService {
 
     // 검색
     public PageResultDTO<BibleDTO, BibleKorhrv> getSearchPage(PageRequestDTO requestDTO) {
-        Pageable pageable = requestDTO.getPageable(Sort.by("id").ascending());
-        BooleanBuilder builder = new BooleanBuilder();
-        QBibleKorhrv qBibleKorhrv = QBibleKorhrv.bibleKorhrv;
-        List<String> keywords = requestDTO.getKeywords();
-        String type = requestDTO.getType();
+            Pageable pageable = requestDTO.getPageable(Sort.by("id").ascending());
+            BooleanBuilder builder = new BooleanBuilder();
+            QBibleKorhrv qBibleKorhrv = QBibleKorhrv.bibleKorhrv;
+            List<String> keywords = requestDTO.getKeywords();
+            String type = requestDTO.getType();
 
-        if (type != null && !keywords.isEmpty()) {
-            if (type.contains("content")) {
-                for (String word : keywords) {
-                    BooleanExpression expression = qBibleKorhrv.content.contains(word);
-                    builder.and(expression);
-                }
-            } else if (type.contains("bcv") && keywords.size() == 3) {
-                int book = getBookNumber(keywords.get(0));
-                int chapter = extractNumber(keywords.get(1));
-                int verse = extractNumber(keywords.get(2));
+            if (type != null && keywords != null) {
+                if (type.contains("content")) {
+                    for (String word : keywords) {
+                        BooleanExpression expression = qBibleKorhrv.content.contains(word);
+                        builder.and(expression);
+                    }
+                } else if (type.contains("bcv") && keywords.size() == 3) {
+                    int book = getBookNumber(keywords.get(0));
+                    int chapter = extractNumber(keywords.get(1));
+                    int verse = extractNumber(keywords.get(2));
 
-                if (book > 0 && chapter > 0 && verse > 0) {
-                    builder.and(qBibleKorhrv.book.eq(book));
-                    builder.and(qBibleKorhrv.chapter.eq(chapter));
-                    builder.and(qBibleKorhrv.verse.eq(verse));
+                    if (book > 0 && chapter > 0 && verse > 0) {
+                        builder.and(qBibleKorhrv.book.eq(book));
+                        builder.and(qBibleKorhrv.chapter.eq(chapter));
+                        builder.and(qBibleKorhrv.verse.eq(verse));
+                    }
                 }
+                Page<BibleKorhrv> result = bibleRepository.findAll(builder, pageable);
+                Function<BibleKorhrv, BibleDTO> fn = this::entityToDTO; // 메서드 레퍼런스 사용
+                return new PageResultDTO<>(result, fn);
             }
-        }
-
-        Page<BibleKorhrv> result = bibleRepository.findAll(builder, pageable);
-        Function<BibleKorhrv, BibleDTO> fn = this::entityToDTO; // 메서드 레퍼런스 사용
-        return new PageResultDTO<>(result, fn);
+            else return null; // 조건문이 성립되지 않았을때 null값 return
     }
 
     private int extractNumber(String str) { // 숫자 추출 로직. 추출숫자가 없다면 -1 반환

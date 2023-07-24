@@ -34,19 +34,15 @@ class BibleWebApplicationTests {
                 .page(1)
                 .size(50)
                 .type("content")
-                .keyword("예수 ") // 검색 키워드
+                .keyword(" ") // 검색 키워드
                 .build();
 
         PageResultDTO<BibleDTO, BibleKorhrv> resultDTO = service.getSearchPage(pageRequestDTO);
-        System.out.println("PREV: " + resultDTO.isPrev());
-        System.out.println("NEXT: " + resultDTO.isNext());
-        System.out.println("TOTAL PAGE: " + resultDTO.getTotalPage());
-        System.out.println("TOTAL DATA: " + resultDTO.getTotalData());
-        System.out.println("-------------------------------");
-        for (BibleDTO bibleDTO : resultDTO.getDtoList()) {
-            System.out.println(bibleDTO);
+        if (resultDTO  != null) {
+            for (BibleDTO bibleDTO : resultDTO.getDtoList()) {
+                System.out.println(bibleDTO);
+            }
         }
-        System.out.println("================================");
-        resultDTO.getPageList().forEach(i -> System.out.println(i));
+        else System.out.println("null임");
     }
 }

@@ -31,15 +31,15 @@ public class PageRequestDTO {
 
     private List<String> keywords;
     public List<String> getKeywords() {
-        if (keywords == null && keyword != null) {
+        if (keyword.trim() != "" && keywords == null) { // keywords가 빈값이고 keyword의 공백을 제거한 값이 빈값이 아닐때
             String trimmedKeyword = keyword.trim();
-            if (!trimmedKeyword.isEmpty()) {
+            if (!trimmedKeyword.isEmpty() && trimmedKeyword != "") {
                 keywords = Arrays.asList(trimmedKeyword.split("\\s+"));
             } else {
                 keywords = Collections.emptyList(); // keyword가 비어있거나 공백만 있는 경우 빈 리스트 반환
             }
         }
-        return keywords;
+        return keywords; // 조건문이 실행되지 않았을대 null값으로 입력
     }
 
 }
